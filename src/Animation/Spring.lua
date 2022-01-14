@@ -17,8 +17,8 @@ local updateAll = require(Package.Dependencies.updateAll)
 
 local class = {}
 
-local CLASS_METATABLE = {__index = class}
-local WEAK_KEYS_METATABLE = {__mode = "k"}
+local CLASS_METATABLE = { __index = class }
+local WEAK_KEYS_METATABLE = { __mode = "k" }
 
 local ENABLE_PARAM_SETTERS = false
 
@@ -65,7 +65,6 @@ function class:update(): boolean
 		SpringScheduler.remove(self)
 		SpringScheduler.add(self)
 		return false
-
 	else
 		-- goal change - reconfigure spring to target new goal
 		local oldType = self._currentType
@@ -94,7 +93,6 @@ function class:update(): boolean
 
 			SpringScheduler.remove(self)
 			return true
-
 		elseif numSprings == 0 then
 			-- if the type hasn't changed, but isn't animatable, just change the
 			-- current value
@@ -102,7 +100,6 @@ function class:update(): boolean
 
 			SpringScheduler.remove(self)
 			return true
-
 		else
 			-- types match, and is animatable, so just add to the spring
 			-- scheduler and let it animate to the goal!
@@ -171,7 +168,6 @@ if ENABLE_PARAM_SETTERS then
 
 		SpringScheduler.add(self)
 	end
-
 end
 
 local function Spring<T>(
@@ -188,7 +184,7 @@ local function Spring<T>(
 		damping = 1
 	end
 
-	local dependencySet = {[goalState] = true}
+	local dependencySet = { [goalState] = true }
 	local speedIsState = typeof(speed) == "table" and speed.type == "State"
 	local dampingIsState = typeof(damping) == "table" and damping.type == "State"
 
@@ -222,7 +218,7 @@ local function Spring<T>(
 
 		_springPositions = nil,
 		_springGoals = nil,
-		_springVelocities = nil
+		_springVelocities = nil,
 	}, CLASS_METATABLE)
 
 	initDependency(self)

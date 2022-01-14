@@ -4,7 +4,7 @@
 	Stores common public-facing type information for Fusion APIs.
 ]]
 
-type Set<T> = {[T]: any}
+type Set<T> = { [T]: any }
 
 --[[
 	General use types
@@ -13,38 +13,35 @@ type Set<T> = {[T]: any}
 -- A unique symbolic value.
 export type Symbol = {
 	type: string, -- replace with "Symbol" when Luau supports singleton types
-	name: string
+	name: string,
 }
 
 -- Types that can be expressed as vectors of numbers, and so can be animated.
 export type Animatable =
-	number |
-	CFrame |
-	Color3 |
-	ColorSequenceKeypoint |
-	DateTime |
-	NumberRange |
-	NumberSequenceKeypoint |
-	PhysicalProperties |
-	Ray |
-	Rect |
-	Region3 |
-	Region3int16 |
-	UDim |
-	UDim2 |
-	Vector2 |
-	Vector2int16 |
-	Vector3 |
-	Vector3int16
+	number
+	| CFrame
+	| Color3
+	| ColorSequenceKeypoint
+	| DateTime
+	| NumberRange
+	| NumberSequenceKeypoint
+	| PhysicalProperties
+	| Ray
+	| Rect
+	| Region3
+	| Region3int16
+	| UDim
+	| UDim2
+	| Vector2
+	| Vector2int16
+	| Vector3
+	| Vector3int16
 
 -- A task which can be accepted for cleanup.
 export type Task =
-	Instance |
-	RBXScriptConnection |
-	() -> () |
-	{destroy: (any) -> ()} |
-	{Destroy: (any) -> ()} |
-	{Task}
+	Instance
+	| RBXScriptConnection
+	| () -> () | { destroy: (any) -> () } | { Destroy: (any) -> () } | { Task }
 
 --[[
 	Generic reactive graph types
@@ -52,20 +49,20 @@ export type Task =
 
 -- A graph object which can have dependents.
 export type Dependency = {
-	dependentSet: Set<Dependent>
+	dependentSet: Set<Dependent>,
 }
 
 -- A graph object which can have dependencies.
 export type Dependent = {
 	update: (Dependent) -> boolean,
-	dependencySet: Set<Dependency>
+	dependencySet: Set<Dependency>,
 }
 
 -- An object which stores a piece of reactive state.
 export type StateObject<T> = Dependency & {
 	type: string, -- replace with "State" when Luau supports singleton types
 	kind: string,
-	get: (StateObject<T>, asDependency: boolean?) -> T
+	get: (StateObject<T>, asDependency: boolean?) -> T,
 }
 
 -- Either a constant value of type T, or a state object containing type T.
@@ -78,7 +75,7 @@ export type CanBeState<T> = StateObject<T> | T
 -- A state object whose value can be set at any time by the user.
 export type Value<T> = StateObject<T> & {
 	-- kind: "State" (add this when Luau supports singleton types)
- 	set: (Value<T>, newValue: any, force: boolean?) -> ()
+	set: (Value<T>, newValue: any, force: boolean?) -> (),
 }
 
 -- A state object whose value is derived from other objects using a callback.
@@ -87,7 +84,7 @@ export type Computed<T> = StateObject<T> & Dependent & {
 }
 
 -- A state object whose value is derived from other objects using a callback.
-export type ComputedPairs<K, V> = StateObject<{[K]: V}> & Dependent & {
+export type ComputedPairs<K, V> = StateObject<{ [K]: V }> & Dependent & {
 	-- kind: "ComputedPairs" (add this when Luau supports singleton types)
 }
 
@@ -108,7 +105,7 @@ export type Spring<T> = StateObject<T> & Dependent & {
 -- An object which can listen for updates on another state object.
 export type Observer = Dependent & {
 	-- kind: "Observer" (add this when Luau supports singleton types)
-  	onChange: (Observer, callback: () -> ()) -> (() -> ())
+	onChange: (Observer, callback: () -> ()) -> (() -> ()),
 }
 
 --[[
@@ -118,7 +115,7 @@ export type Observer = Dependent & {
 -- A semi-weak instance reference.
 export type SemiWeakRef = {
 	type: string, -- replace with "SemiWeakRef" when Luau supports singleton types
-	instance: Instance?
+	instance: Instance?,
 }
 
 -- Denotes children instances in an instance or component's property table.
@@ -126,13 +123,13 @@ export type SpecialKey = {
 	type: string, -- replace with "SpecialKey" when Luau supports singleton types
 	kind: string,
 	stage: string, -- replace with "self" | "descendants" | "ancestor" | "observer" when Luau supports singleton types
-	apply: (SpecialKey, value: any, applyTo: SemiWeakRef, cleanupTasks: {Task}) -> ()
+	apply: (SpecialKey, value: any, applyTo: SemiWeakRef, cleanupTasks: { Task }) -> (),
 }
 
 -- A collection of instances that may be parented to another instance.
-export type Children = Instance | StateObject<Children> | {[any]: Children}
+export type Children = Instance | StateObject<Children> | { [any]: Children }
 
 -- A table that defines an instance's properties, handlers and children.
-export type PropertyTable = {[string | SpecialKey]: any}
+export type PropertyTable = { [string | SpecialKey]: any }
 
 return nil

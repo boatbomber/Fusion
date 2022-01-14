@@ -14,8 +14,8 @@ local initDependency = require(Package.Dependencies.initDependency)
 
 local class = {}
 
-local CLASS_METATABLE = {__index = class}
-local WEAK_KEYS_METATABLE = {__mode = "k"}
+local CLASS_METATABLE = { __index = class }
+local WEAK_KEYS_METATABLE = { __mode = "k" }
 
 --[[
 	Returns the current value of this Tween object.
@@ -51,17 +51,13 @@ function class:update(): boolean
 	return false
 end
 
-local function Tween<T>(
-	goalState: PubTypes.Value<T>,
-	tweenInfo: TweenInfo?
-): Types.Tween<T>
-
+local function Tween<T>(goalState: PubTypes.Value<T>, tweenInfo: TweenInfo?): Types.Tween<T>
 	local currentValue = goalState:get(false)
 
 	local self = setmetatable({
 		type = "State",
 		kind = "Tween",
-		dependencySet = {[goalState] = true},
+		dependencySet = { [goalState] = true },
 		-- if we held strong references to the dependents, then they wouldn't be
 		-- able to get garbage collected when they fall out of scope
 		dependentSet = setmetatable({}, WEAK_KEYS_METATABLE),
@@ -76,7 +72,7 @@ local function Tween<T>(
 		-- isn't affected by :setTweenInfo() until next change
 		_currentTweenInfo = tweenInfo,
 		_currentTweenDuration = 0,
-		_currentTweenStartTime = 0
+		_currentTweenStartTime = 0,
 	}, CLASS_METATABLE)
 
 	initDependency(self)

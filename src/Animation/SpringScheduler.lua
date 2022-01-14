@@ -14,19 +14,19 @@ local springCoefficients = require(Package.Animation.springCoefficients)
 local updateAll = require(Package.Dependencies.updateAll)
 local logError = require(Package.Logging.logError)
 
-type Set<T> = {[T]: any}
+type Set<T> = { [T]: any }
 type Spring = Types.Spring<any>
 
 local SpringScheduler = {}
 
-local WEAK_KEYS_METATABLE = {__mode = "k"}
+local WEAK_KEYS_METATABLE = { __mode = "k" }
 
 -- when a spring has displacement and velocity below +/- epsilon, the spring
 -- won't send updates
 local MOVEMENT_EPSILON = 0.0001
 
 -- organises springs by speed and damping, for batch processing
-local springBuckets: {[number]: {[number]: Set<Spring>}} = {}
+local springBuckets: { [number]: { [number]: Set<Spring> } } = {}
 
 --[[
 	Adds a Spring to be updated every render step.
@@ -127,10 +127,7 @@ local function updateAllSprings(timeStep: number)
 					local newDisplacement = oldDisplacement * posPosCoef + oldVelocity * posVelCoef
 					local newVelocity = oldDisplacement * velPosCoef + oldVelocity * velVelCoef
 
-					if
-						math.abs(newDisplacement) > MOVEMENT_EPSILON or
-						math.abs(newVelocity) > MOVEMENT_EPSILON
-					then
+					if math.abs(newDisplacement) > MOVEMENT_EPSILON or math.abs(newVelocity) > MOVEMENT_EPSILON then
 						isMoving = true
 					end
 
@@ -151,10 +148,6 @@ local function updateAllSprings(timeStep: number)
 	end
 end
 
-RunService:BindToRenderStep(
-	"__FusionSpringScheduler",
-	Enum.RenderPriority.First.Value,
-	updateAllSprings
-)
+RunService:BindToRenderStep("__FusionSpringScheduler", Enum.RenderPriority.First.Value, updateAllSprings)
 
 return SpringScheduler

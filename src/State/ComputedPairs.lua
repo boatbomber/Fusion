@@ -20,8 +20,8 @@ local cleanup = require(Package.Utility.cleanup)
 
 local class = {}
 
-local CLASS_METATABLE = {__index = class}
-local WEAK_KEYS_METATABLE = {__mode = "k"}
+local CLASS_METATABLE = { __index = class }
+local WEAK_KEYS_METATABLE = { __mode = "k" }
 
 --[[
 	Returns the current value of this ComputedPairs object.
@@ -89,7 +89,7 @@ function class:update(): boolean
 				-- for us, so let's not introduce unnecessary leak opportunities
 				dependencySet = setmetatable({}, WEAK_KEYS_METATABLE),
 				oldDependencySet = setmetatable({}, WEAK_KEYS_METATABLE),
-				dependencyValues = setmetatable({}, WEAK_KEYS_METATABLE)
+				dependencyValues = setmetatable({}, WEAK_KEYS_METATABLE),
 			}
 			self._keyData[key] = keyData
 		end
@@ -182,13 +182,13 @@ function class:update(): boolean
 end
 
 local function ComputedPairs<K, VI, VO>(
-	inputTable: PubTypes.CanBeState<{[K]: VI}>,
+	inputTable: PubTypes.CanBeState<{ [K]: VI }>,
 	processor: (K, VI) -> VO,
 	destructor: (VO) -> ()?
 ): Types.ComputedPairs<K, VI, VO>
 	-- if destructor function is not defined, use the default cleanup function
 	if destructor == nil then
-		destructor = (cleanup) :: (VO) -> ()
+		destructor = cleanup :: (VO) -> ()
 	end
 
 	local inputIsState = inputTable.type == "State" and typeof(inputTable.get) == "function"
@@ -210,7 +210,7 @@ local function ComputedPairs<K, VI, VO>(
 		_oldInputTable = {},
 		_outputTable = {},
 		_oldOutputTable = {},
-		_keyData = {}
+		_keyData = {},
 	}, CLASS_METATABLE)
 
 	initDependency(self)

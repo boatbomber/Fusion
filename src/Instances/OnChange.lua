@@ -15,7 +15,7 @@ local function OnChange(propertyName: string): PubTypes.SpecialKey
 	changeKey.kind = "OnChange"
 	changeKey.stage = "observer"
 
-	function changeKey:apply(callback: any, applyToRef: PubTypes.SemiWeakRef, cleanupTasks: {PubTypes.Task})
+	function changeKey:apply(callback: any, applyToRef: PubTypes.SemiWeakRef, cleanupTasks: { PubTypes.Task })
 		local instance = applyToRef.instance :: Instance
 		local ok, event = pcall(instance.GetPropertyChangedSignal, instance, propertyName)
 		if not ok then

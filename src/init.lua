@@ -26,11 +26,15 @@ type Fusion = {
 
 	Value: <T>(initialValue: T) -> Value<T>,
 	Computed: <T>(callback: () -> T) -> Computed<T>,
-	ComputedPairs: <K, VI, VO>(inputTable: CanBeState<{[K]: VI}>, processor: (K, VI) -> VO, destructor: (VO) -> ()?) -> ComputedPairs<K, VO>,
+	ComputedPairs: <K, VI, VO>(
+		inputTable: CanBeState<{ [K]: VI }>,
+		processor: (K, VI) -> VO,
+		destructor: (VO) -> ()?
+	) -> ComputedPairs<K, VO>,
 	Observer: (watchedState: StateObject<any>) -> Observer,
 
 	Tween: <T>(goalState: StateObject<T>, tweenInfo: TweenInfo?) -> Tween<T>,
-	Spring: <T>(goalState: StateObject<T>, speed: number?, damping: number?) -> Spring<T>
+	Spring: <T>(goalState: StateObject<T>, speed: number?, damping: number?) -> Spring<T>,
 }
 
 return restrictRead("Fusion", {
@@ -46,5 +50,5 @@ return restrictRead("Fusion", {
 	Observer = require(script.State.Observer),
 
 	Tween = require(script.Animation.Tween),
-	Spring = require(script.Animation.Spring)
+	Spring = require(script.Animation.Spring),
 }) :: Fusion

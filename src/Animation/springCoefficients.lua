@@ -24,9 +24,7 @@ local function springCoefficients(timeStep: number, damping: number, speed: numb
 	-- if time step or speed is 0, then the spring won't move, so an identity
 	-- matrix can be returned early
 	if timeStep == 0 or speed == 0 then
-		return
-			1, 0,
-			0, 1
+		return 1, 0, 0, 1
 	end
 
 	if damping > 1 then
@@ -35,15 +33,15 @@ local function springCoefficients(timeStep: number, damping: number, speed: numb
 		-- solutions to the characteristic equation
 		-- z = -ζω ± Sqrt[ζ^2 - 1] ω
 
-		local zRoot = math.sqrt(damping^2 - 1)
+		local zRoot = math.sqrt(damping ^ 2 - 1)
 
-		local z1 = (-zRoot - damping)*speed
-		local z2 = (zRoot - damping)*speed
+		local z1 = (-zRoot - damping) * speed
+		local z2 = (zRoot - damping) * speed
 
 		-- x[t] -> x0(e^(t z2) z1 - e^(t z1) z2)/(z1 - z2)
 		--		 + v0(e^(t z1) - e^(t z2))/(z1 - z2)
 
-		local zDivide = 1/(z1 - z2)
+		local zDivide = 1 / (z1 - z2)
 
 		local z1Exp = math.exp(timeStep * z1)
 		local z2Exp = math.exp(timeStep * z2)
@@ -54,13 +52,10 @@ local function springCoefficients(timeStep: number, damping: number, speed: numb
 		-- v[t] -> x0(z1 z2(-e^(t z1) + e^(t z2)))/(z1 - z2)
 		--		 + v0(z1 e^(t z1) - z2 e^(t z2))/(z1 - z2)
 
-		local velPosCoef = z1*z2 * (-z1Exp + z2Exp) * zDivide
-		local velVelCoef = (z1*z1Exp - z2*z2Exp) * zDivide
+		local velPosCoef = z1 * z2 * (-z1Exp + z2Exp) * zDivide
+		local velVelCoef = (z1 * z1Exp - z2 * z2Exp) * zDivide
 
-		return
-			posPosCoef, posVelCoef,
-			velPosCoef, velVelCoef
-
+		return posPosCoef, posVelCoef, velPosCoef, velVelCoef
 	elseif damping == 1 then
 		-- critically damped spring
 
@@ -74,29 +69,26 @@ local function springCoefficients(timeStep: number, damping: number, speed: numb
 
 		-- v[t] -> x0(t ω^2)(-e^-tω) + v0(1 - tω)(e^-tω)
 
-		local velPosCoef = -negSpeedExp * (timeStep * speed*speed)
+		local velPosCoef = -negSpeedExp * (timeStep * speed * speed)
 		local velVelCoef = negSpeedExp * (1 - timeStepSpeed)
 
-		return
-			posPosCoef, posVelCoef,
-			velPosCoef, velVelCoef
-
+		return posPosCoef, posVelCoef, velPosCoef, velVelCoef
 	else
 		-- underdamped spring
 
 		-- factored out of the solutions to the characteristic equation, to make
 		-- the math cleaner
 
-		local alpha = math.sqrt(1 - damping^2) * speed
+		local alpha = math.sqrt(1 - damping ^ 2) * speed
 
 		-- x[t] -> x0(e^-tζω)(α Cos[tα] + ζω Sin[tα])/α
 		--       + v0(e^-tζω)(Sin[tα])/α
 
 		local negDampSpeedExp = math.exp(-timeStep * damping * speed)
 
-		local sinAlpha = math.sin(timeStep*alpha)
-		local alphaCosAlpha = alpha * math.cos(timeStep*alpha)
-		local dampSpeedSinAlpha = damping*speed*sinAlpha
+		local sinAlpha = math.sin(timeStep * alpha)
+		local alphaCosAlpha = alpha * math.cos(timeStep * alpha)
+		local dampSpeedSinAlpha = damping * speed * sinAlpha
 
 		local invAlpha = 1 / alpha
 
@@ -106,12 +98,10 @@ local function springCoefficients(timeStep: number, damping: number, speed: numb
 		-- v[t] -> x0(-e^-tζω)(α^2 + ζ^2 ω^2)(Sin[tα])/α
 		--       + v0(e^-tζω)(α Cos[tα] - ζω Sin[tα])/α
 
-		local velPosCoef = -negDampSpeedExp * (alpha*alpha + damping*damping * speed*speed) * sinAlpha * invAlpha
+		local velPosCoef = -negDampSpeedExp * (alpha * alpha + damping * damping * speed * speed) * sinAlpha * invAlpha
 		local velVelCoef = negDampSpeedExp * (alphaCosAlpha - dampSpeedSinAlpha) * invAlpha
 
-		return
-			posPosCoef, posVelCoef,
-			velPosCoef, velVelCoef
+		return posPosCoef, posVelCoef, velPosCoef, velVelCoef
 	end
 end
 
