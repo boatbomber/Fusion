@@ -43,6 +43,12 @@ export type Task =
 	| RBXScriptConnection
 	| () -> () | { destroy: (any) -> () } | { Destroy: (any) -> () } | { Task }
 
+-- Script-readable version information.
+export type Version = {
+	major: number,
+	minor: number,
+	isRelease: boolean
+}
 --[[
 	Generic reactive graph types
 ]]
